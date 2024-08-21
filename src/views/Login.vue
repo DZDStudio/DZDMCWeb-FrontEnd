@@ -70,7 +70,6 @@ const goHome = () => {
 const steps = ref(0)
 const pwd = ref("")
 const mail = ref("")
-const code = ref("")
 const failMsg = ref("未知原因")
 const turnstile_token = ref("")
 const turnstile_state = ref(false)
