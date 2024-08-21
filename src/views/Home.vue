@@ -3,11 +3,9 @@
             <mdui-list class="notify-item">
                 <mdui-collapse accordion v-if="notifysNum = notifys.length" v-for="( notify, index ) in notifys">
                     <mdui-divider v-if="index != 0"></mdui-divider>
-                    <mdui-collapse-item class="">
+                    <mdui-collapse-item>
                         <mdui-list-item slot="header" :icon=notify.type>{{ notify.title }}</mdui-list-item>
-                        <div style="margin-left: 2.5rem">
-                            <mdui-list-item>{{ notify.content }}</mdui-list-item>
-                        </div>
+                        <mdui-list-item>{{ notify.content }}</mdui-list-item>
                     </mdui-collapse-item>
                 </mdui-collapse>
             </mdui-list>
