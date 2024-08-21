@@ -2,7 +2,7 @@
     <div class="app-container">
         <mdui-navigation-rail divider>
             <mdui-avatar src="img/logo-1024.jpg" style="margin-bottom:20px;margin-top:20px;--shape-corner: 10px" onclick="window.location.href='/'"></mdui-avatar>
-            <mdui-button-icon icon="refresh" slot="bottom" id="loading" loading></mdui-button-icon>
+            <mdui-button-icon icon="refresh" slot="bottom" id="loading" loading @click="reloadPath"></mdui-button-icon>
     
             <mdui-navigation-rail-item v-if="exData.isLogin.value" @click="goHome" icon="home">主页</mdui-navigation-rail-item>
             <mdui-navigation-rail-item v-if="exData.isLogin.value" @click="goUser" icon="supervised_user_circle">用户</mdui-navigation-rail-item>
@@ -60,6 +60,9 @@ function goRegister() {
 }
 function goBack() {
   router.go(-1)
+}
+function reloadPath() {
+    location.reload()
 }
 
 // 加载、刷新
