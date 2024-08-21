@@ -40,4 +40,9 @@ let exData = {
     apiHost: "https://tj.node.dzdstudo.cn:1823"
 }
 
+// 开发环境识别
+if (window.location.href.indexOf("localhost") !== -1) {
+    exData.apiHost = "http://127.0.0.1:1823"
+}
+
 export { exData , setCookie , getCookie }

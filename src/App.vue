@@ -1,30 +1,30 @@
 <template>
     <div class="app-container">
-      <mdui-navigation-rail divider>
-        <mdui-avatar src="img/logo-1024.jpg" style="margin-bottom:20px;margin-top:20px;--shape-corner: 10px" onclick="window.location.href='/'"></mdui-avatar>
-        <mdui-button-icon icon="refresh" slot="bottom" id="loading" loading></mdui-button-icon>
-  
-        <mdui-navigation-rail-item v-if="exData.isLogin.value" @click="goHome" icon="home">主页</mdui-navigation-rail-item>
-        <mdui-navigation-rail-item v-if="exData.isLogin.value" @click="goUser" icon="supervised_user_circle">用户</mdui-navigation-rail-item>
-        <mdui-navigation-rail-item v-if="exData.isLogin.value" @click="goMap" icon="map">地图</mdui-navigation-rail-item>
-        <mdui-navigation-rail-item v-if="exData.isLogin.value" @click="goQA" icon="question_answer">Q&A</mdui-navigation-rail-item>
-        <mdui-navigation-rail-item v-if="!exData.isLogin.value" @click="goLogin" icon="login">登录</mdui-navigation-rail-item>
-        <mdui-navigation-rail-item v-if="!exData.isLogin.value" @click="goRegister" icon="fingerprint">注册</mdui-navigation-rail-item>
-      </mdui-navigation-rail>
-      
-      <div class="content-container">
-        <el-page-header @back="goBack">
-          <template #content>
-            <span>{{ exData.title }}</span>
-          </template>
-        </el-page-header>
-  
-        <RouterView class="router-view"></RouterView>
-      </div>
-  
-      <el-backtop :right="100" :bottom="100" />
+        <mdui-navigation-rail divider>
+            <mdui-avatar src="img/logo-1024.jpg" style="margin-bottom:20px;margin-top:20px;--shape-corner: 10px" onclick="window.location.href='/'"></mdui-avatar>
+            <mdui-button-icon icon="refresh" slot="bottom" id="loading" loading></mdui-button-icon>
+    
+            <mdui-navigation-rail-item v-if="exData.isLogin.value" @click="goHome" icon="home">主页</mdui-navigation-rail-item>
+            <mdui-navigation-rail-item v-if="exData.isLogin.value" @click="goUser" icon="supervised_user_circle">用户</mdui-navigation-rail-item>
+            <mdui-navigation-rail-item v-if="exData.isLogin.value" @click="goMap" icon="map">地图</mdui-navigation-rail-item>
+            <mdui-navigation-rail-item v-if="exData.isLogin.value" @click="goQA" icon="question_answer">Q&A</mdui-navigation-rail-item>
+            <mdui-navigation-rail-item v-if="!exData.isLogin.value" @click="goLogin" icon="login">登录</mdui-navigation-rail-item>
+            <mdui-navigation-rail-item v-if="!exData.isLogin.value" @click="goRegister" icon="fingerprint">注册</mdui-navigation-rail-item>
+        </mdui-navigation-rail>
+        
+        <div class="content-container">
+            <el-page-header @back="goBack">
+            <template #content>
+                <span>{{ exData.title }}</span>
+            </template>
+            </el-page-header>
+    
+            <RouterView class="router-view"></RouterView>
+        </div>
+    
+        <el-backtop :right="100" :bottom="100" />
     </div>
-  </template>
+</template>
 
 <script setup>
 import { $ } from "mdui/jq.js"
@@ -95,9 +95,7 @@ function checkLogin() {
 
         // 更新路由
         // 页面跳转、路由
-        if (exData.isLogin.value) {
-            router.push("/")
-        } else {
+        if (!exData.isLogin.value) {
             router.push("/login")
         }
     }).catch(err => {

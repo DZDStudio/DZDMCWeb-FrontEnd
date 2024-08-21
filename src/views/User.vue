@@ -1,28 +1,49 @@
 <template>
     <div style="margin-top:20px">
-        <mdui-list>
-            <mdui-list-item icon="supervised_user_circle" nonclickable headline="昵称" :description=userData.name>
-                <mdui-button-icon slot="end-icon" icon="edit_note" @click="onName()"></mdui-button-icon>
-            </mdui-list-item>
-            <mdui-divider></mdui-divider>
-            <mdui-list-item icon="recent_actors" nonclickable headline="JavaID" :description=userData.javaid>
-                <mdui-button-icon slot="end-icon" icon="edit_note" @click="onJavaId()"></mdui-button-icon>
-            </mdui-list-item>
-            <mdui-divider></mdui-divider>
-            <mdui-list-item icon="videogame_asset" nonclickable headline="XboxID" :description=userData.xboxid>
-                <mdui-button-icon slot="end-icon" icon="edit_note" @click="onXboxid()"></mdui-button-icon>
-            </mdui-list-item>
-            <mdui-divider></mdui-divider>
-            <mdui-list-item icon="chat" nonclickable headline="QQ号" :description=userData.qq>
-                <mdui-button-icon slot="end-icon" icon="edit_note" @click="onQQ()"></mdui-button-icon>
-            </mdui-list-item>
-            <mdui-divider></mdui-divider>
-            <mdui-list-item icon="mail" nonclickable headline="邮箱" :description=userData.mail></mdui-list-item>
-            <mdui-divider></mdui-divider>
-            <mdui-list-item icon="password" nonclickable headline="密码" description="********">
-                <mdui-button-icon slot="end-icon" icon="edit_note" @click="onPwd()"></mdui-button-icon>
-            </mdui-list-item>
-        </mdui-list>
+        <mdui-tabs value="tab-1" full-width>
+            <mdui-tab value="tab-1">用户信息</mdui-tab>
+            <mdui-tab value="tab-2">登陆设备</mdui-tab>
+
+            <mdui-tab-panel slot="panel" value="tab-1">
+                <mdui-list>
+                    <mdui-list-item icon="supervised_user_circle" nonclickable headline="昵称" :description=userData.name>
+                        <mdui-button-icon slot="end-icon" icon="edit_note" @click="onName()"></mdui-button-icon>
+                    </mdui-list-item>
+                    <mdui-divider></mdui-divider>
+                    <mdui-list-item icon="recent_actors" nonclickable headline="JavaID" :description=userData.javaid>
+                        <mdui-button-icon slot="end-icon" icon="edit_note" @click="onJavaId()"></mdui-button-icon>
+                    </mdui-list-item>
+                    <mdui-divider></mdui-divider>
+                    <mdui-list-item icon="videogame_asset" nonclickable headline="XboxID" :description=userData.xboxid>
+                        <mdui-button-icon slot="end-icon" icon="edit_note" @click="onXboxid()"></mdui-button-icon>
+                    </mdui-list-item>
+                    <mdui-divider></mdui-divider>
+                    <mdui-list-item icon="chat" nonclickable headline="QQ号" :description=userData.qq>
+                        <mdui-button-icon slot="end-icon" icon="edit_note" @click="onQQ()"></mdui-button-icon>
+                    </mdui-list-item>
+                    <mdui-divider></mdui-divider>
+                    <mdui-list-item icon="mail" nonclickable headline="邮箱" :description=userData.mail></mdui-list-item>
+                    <mdui-divider></mdui-divider>
+                    <mdui-list-item icon="password" nonclickable headline="密码" description="********">
+                        <mdui-button-icon slot="end-icon" icon="edit_note" @click="onPwd()"></mdui-button-icon>
+                    </mdui-list-item>
+                </mdui-list>
+            </mdui-tab-panel>
+
+            <mdui-tab-panel slot="panel" value="tab-2">
+                <mdui-list v-for="(session, index) in userData.session">
+                    <mdui-list-item 
+                        icon="devices_other"
+                        nonclickable
+                        :headline="getHeadline(session)"
+                        :description="getDescription(session)">
+                        
+                        <mdui-button slot="end-icon" icon="download_for_offline" variant="outlined" @click="onOffline(session.sessionId)">下线</mdui-button>
+                    </mdui-list-item>
+                    <mdui-divider></mdui-divider>
+                </mdui-list>
+            </mdui-tab-panel>
+        </mdui-tabs>
     </div>
 </template>
 
@@ -36,15 +57,15 @@ import { ElNotification } from 'element-plus'
 
 // 更新标题
 onMounted(() => {
-exData.title.value = "用户"
+    exData.title.value = "用户"
 })
 
 const userData = ref({
-    name: "",
-    identifier: "",
-    xboxid: "",
-    qq: "",
-    mail: false
+    name: "---",
+    javaid: "---",
+    xboxid: "---",
+    qq: "---",
+    mail: "---",
 })
 
 // 获取用户信息
@@ -62,6 +83,60 @@ function getUserData() {
     })
 }
 getUserData()
+
+// 获取时间字符串
+function getTimeString(time) {
+    const date = new Date(time)
+    return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+}
+
+// 获取标题
+function getHeadline(session) {
+    if (userData.value.currentSession == session.sessionId) {
+        return `[本机] ${session.platform}(${session.browser})`
+    } else {
+        return `${session.platform}(${session.browser})`
+    }
+}
+
+// 获取描述
+function getDescription(session) {
+    return `${getTimeString(session.loginTime)}  IP: ${session.ip}`;
+}
+
+// 下线设备
+function onOffline(session) {
+    axios.post(exData.apiHost + "/user/offline", {
+        "token": exData.token.value,
+        "sessionId": session
+    }).then(res => {
+        if (res.data.code == 200) {
+            if (res.data.data.isCurrentDevice) {
+                // 刷新网页
+                location.reload()
+            } else {
+                ElNotification({
+                    title: '下线成功!',
+                    message: "已将目标设备下线!",
+                    type: 'success',
+                })
+                getUserData()
+            }
+        } else {
+            ElNotification({
+                title: '下线失败!',
+                message: res.data.msg,
+                type: 'error',
+            })
+        }
+    }).catch(err => {
+        ElNotification({
+            title: '网络错误',
+            message: err,
+            type: 'error',
+        })
+    })
+}
 
 // 设置昵称
 function onName() {
