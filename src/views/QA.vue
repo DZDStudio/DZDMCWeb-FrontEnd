@@ -5,18 +5,16 @@
 
                 <mdui-collapse-item>
                     <mdui-list-item slot="header" icon="videogame_asset">如何使用基岩版客户端进入服务器?</mdui-list-item>
-                    <div style="margin-left: 2.5rem">
-                        <mdui-list-item class="mdui-prose">
-                            1. 您需要在 “用户” 页面设定您的 “XboxID”。<br>
-                            2. 使用您设定的 “XboxID” 通过下方信息进入服务器。<br><br>
-                            服务器信息：<br>
-                            IP地址：go.dzdgame.cn<br>
-                            端口：19132<br><br>
-                            <el-image src="https://motdbe.blackbe.work/status_img?host=go.dzdgame.cn:19132">
-                                <template #error><div class="image-slot"></div></template>
-                            </el-image>
-                        </mdui-list-item>
-                    </div>
+                    <mdui-list-item class="mdui-prose">
+                        1. 您需要在 “用户” 页面设定您的 “XboxID”。<br>
+                        2. 使用您设定的 “XboxID” 通过下方信息进入服务器。<br><br>
+                        服务器信息：<br>
+                        IP地址：go.dzdgame.cn<br>
+                        端口：19132<br><br>
+                        <el-image src="https://motdbe.blackbe.work/status_img?host=go.dzdgame.cn:19132">
+                            <template #error><div class="image-slot"></div></template>
+                        </el-image>
+                    </mdui-list-item>
                 </mdui-collapse-item>
 
                 <mdui-divider></mdui-divider>
