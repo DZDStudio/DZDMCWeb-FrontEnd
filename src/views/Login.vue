@@ -1,7 +1,7 @@
 <template>
     <el-steps :active="steps" finish-status="success" simple>
         <el-step title="填写" />
-        <el-step title="验证" />
+        <el-step title="提交" />
         <el-step title="完成" />
     </el-steps>
 
@@ -16,17 +16,7 @@
         <mdui-button full-width @click="nextBtn">下一步</mdui-button>
     </div>
 
-    <div v-if="steps == 1" class="centered-e">
-        <div class="centered-in-parent" style="margin-top: 10%;">
-            <img src="/img/logo.svg" icon="fingerprint" class="avatar"></img>
-        </div>
-
-        <div class="centered-in-parent" v-if="!turnstile_state">
-            <vue-turnstile site-key="0x4AAAAAAAPSqmnSEqdmquJb" theme="light" v-model="turnstile_token" @error="turnstile_error" @unsupported="turnstile_unsupported" />
-        </div>
-    </div>
-
-    <div v-if="steps == 2" class="Width-limit centered-e">
+    <div v-if="steps == 1" class="Width-limit centered-e">
         <div class="centered-in-parent" style="margin-top: 10%;">
             <img src="/img/logo.svg" icon="fingerprint" class="avatar"></img>
         </div>
@@ -38,7 +28,7 @@
         <el-progress class="progress" :percentage="100" :indeterminate="true" :stroke-width="15" striped><span></span></el-progress>
     </div>
 
-    <div v-if="steps == 4" class="centered-in-parent">
+    <div v-if="steps == 3" class="centered-in-parent">
         <el-result
             icon="error"
             title="登录失败"
@@ -54,7 +44,6 @@
 
 <script setup>
 import axios from "axios"
-import VueTurnstile from "vue-turnstile"
 import { ElNotification, useTimeout } from 'element-plus'
 import { exData , setCookie } from "../data.js"
 import { useRouter , RouterView } from "vue-router"
@@ -71,9 +60,6 @@ const steps = ref(0)
 const pwd = ref("")
 const mail = ref("")
 const failMsg = ref("未知原因")
-const turnstile_token = ref("")
-const turnstile_state = ref(false)
-
 
 // 更新标题
 onMounted(() => {
@@ -94,23 +80,6 @@ function isValidEmail(email) {
     return emailRegex.test(email)
 }
 
-// 人机验证
-watch(turnstile_token, () => {
-    if (turnstile_token.value != "") {
-        turnstile_state.value = true
-        // 登录
-        login()
-    }
-})
-function turnstile_error(err) {
-    failMsg.value = `人机验证失败，由于：${err}`
-    steps.value = 4
-}
-function turnstile_unsupported() {
-    failMsg.value = `您的浏览器不支持人机验证，请使用其他浏览器`
-    steps.value = 4
-}
-
 // 下一步
 function nextBtn() {
     if (pwd.value == "" || mail.value == "") {
@@ -126,17 +95,17 @@ function nextBtn() {
             type: 'error',
         })
     } else {
-        steps.value = 1
+        login()
     }
 }
+
 // 登录
 function login () {
-    steps.value = 2
+    steps.value = 1
 
     axios.post(exData.apiHost + "/login", {
         pwd: pwd.value,
         mail: mail.value,
-        CFToken: turnstile_token.value
     }).then(res => {
         if (res.data.code == 200) {
             setCookie("token", res.data.data.token, 100)
@@ -146,11 +115,11 @@ function login () {
             goHome()
         } else {
             failMsg.value = res.data.msg
-            steps.value = 4
+            steps.value = 3
         }
     }).catch((err) => {
         failMsg.value = `请求服务器失败，原因：${err}`
-        steps.value = 4
+        steps.value = 3
     })
 }
 </script>
