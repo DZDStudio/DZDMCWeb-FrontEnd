@@ -10,6 +10,7 @@
             <mdui-navigation-rail-item v-if="exData.isLogin.value" @click="goQA" icon="question_answer">Q&A</mdui-navigation-rail-item>
             <mdui-navigation-rail-item v-if="!exData.isLogin.value" @click="goLogin" icon="login">登录</mdui-navigation-rail-item>
             <mdui-navigation-rail-item v-if="!exData.isLogin.value" @click="goRegister" icon="fingerprint">注册</mdui-navigation-rail-item>
+            <mdui-navigation-rail-item v-if="!exData.isLogin.value" @click="goRetrieve" icon="crop_free">找回</mdui-navigation-rail-item>
         </mdui-navigation-rail>
         
         <div class="content-container">
@@ -57,6 +58,9 @@ function goLogin() {
 }
 function goRegister() {
     router.push("/register")
+}
+function goRetrieve() {
+    router.push("/retrieve")
 }
 function goBack() {
   router.go(-1)
