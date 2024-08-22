@@ -305,10 +305,39 @@ function onQQ() {
 
 // 更新密码
 function onPwd() {
-    alert({
-        headline: "抱歉",
-        description: "出于安全考虑，我们暂时不支持更新密码，如有需求请联系管理员！",
-        confirmText: "OK"
+    prompt({
+        headline: "更新密码",
+        description: "请输入您的新密码：",
+        confirmText: "确认",
+        cancelText: "取消",
+        onConfirm: (value) => {            
+            axios.post(exData.apiHost + "/user/pwd", {
+                "token": exData.token.value,
+                "pwd": value
+            }).then(res => {
+                if (res.data.code == 200) {
+                    ElNotification({
+                        title: '更新密码成功!',
+                        message: "更新密码成功!",
+                        type: 'success',
+                    })
+                    // 刷新页面
+                    location.reload()
+                } else {
+                    ElNotification({
+                        title: '更新密码失败!',
+                        message: res.data.msg,
+                        type: 'error',
+                    })
+                }
+            }).catch(err => {
+                ElNotification({
+                    title: '网络错误',
+                    message: err,
+                    type: 'error',
+                })
+            })
+        }
     })
 }
 </script>

@@ -9,10 +9,9 @@
         <div class="centered-in-parent">
             <img src="/img/logo.svg" icon="fingerprint" class="avatar"></img>
         </div>
-
-        <mdui-text-field label="昵称" maxlength="15" counter variant="outlined" @input="nameInput" type="text"></mdui-text-field>
+        
         <mdui-text-field label="邮箱" maxlength="30" counter variant="outlined" @input="mailInput" type="email"></mdui-text-field>
-        <mdui-text-field label="密码" counter variant="outlined" @input="pwdInput" type="password" toggle-password></mdui-text-field>
+        <mdui-text-field label="新密码" counter variant="outlined" @input="pwdInput" type="password" toggle-password></mdui-text-field>
 
         <mdui-button full-width @click="nextBtn">下一步</mdui-button>
     </div>
@@ -48,7 +47,7 @@
     <div v-if="steps == 3" class="centered-in-parent">
         <el-result
             icon="success"
-            title="注册成功"
+            title="密码更新成功"
             :sub-title="computedName"
             class="margin-top-auto"
         >
@@ -61,7 +60,7 @@
     <div v-if="steps == 4" class="centered-in-parent">
         <el-result
             icon="error"
-            title="注册失败"
+            title="密码更新失败"
             :sub-title=failMsg
             class="margin-top-auto"
         >
@@ -91,14 +90,13 @@ function reloadPath() {
 
 // 初始化
 const steps = ref(0)
-const name = ref("")
 const pwd = ref("")
 const mail = ref("")
 const code = ref("")
 const failMsg = ref("未知原因")
 const turnstile_token = ref("")
 const turnstile_state = ref(false)
-const computedName = computed(() => `Hi ${name.value},欢迎加入我们！`)
+const computedName = computed(() => `欢迎回来！`)
 
 // 获取验证码
 function getVerificationCode () {
@@ -115,7 +113,7 @@ function getVerificationCode () {
             type: 'error',
         })
     } else {
-        axios.get(exData.apiHost + "/register/getVerificationCode", {
+        axios.get(exData.apiHost + "/retrieve/getVerificationCode", {
             "params": {
                 mail: mail.value,
                 name: name.value,
@@ -138,13 +136,10 @@ function getVerificationCode () {
 
 // 更新标题
 onMounted(() => {
-    exData.title.value = "注册"
+    exData.title.value = "找回"
 })
 
 // 更新输入
-const nameInput = (event) => {
-    name.value = event.target.value
-}
 const mailInput = (event) => {
     mail.value = event.target.value
 }
@@ -180,7 +175,7 @@ function turnstile_unsupported() {
 
 // 下一步
 function nextBtn() {
-    if (name.value == "" || pwd.value == "" || mail.value == "") {
+    if (pwd.value == "" || mail.value == "") {
         ElNotification({
             title: '错误',
             message: '请输入全部信息！',
@@ -194,15 +189,14 @@ function nextBtn() {
         })
     } else {
         // 验证用户名邮箱是否重复
-        axios.post(exData.apiHost + "/register/checkNameAndMail", {
-            name: name.value,
+        axios.post(exData.apiHost + "/retrieve/checkMail", {
             mail: mail.value,
         }).then(res => {
             if (res.data.code == 200) {
-                if (res.data.data.isExist) {
+                if (!res.data.data.isExist) {
                     ElNotification({
                         title: '错误',
-                        message: '昵称或邮箱已被使用！',
+                        message: res.data.msg,
                         type: 'error',
                     })
                 } else {
@@ -234,16 +228,15 @@ function verificationBtn() {
             type: 'error',
         })
     } else {
-        login()
+        retrieve()
     }
 }
 
 // 注册
-function login () {
+function retrieve () {
     steps.value = 2
 
-    axios.post(exData.apiHost + "/register", {
-        name: name.value,
+    axios.post(exData.apiHost + "/retrieve", {
         pwd: pwd.value,
         mail: mail.value,
         code: code.value
