@@ -37,7 +37,7 @@ let exData = {
     token: ref(getCookie("token")),
     isLogin: ref(getCookie("isLogin")),
     title: ref("主页"),
-    apiHost: "https://tj.node.dzdstudo.cn:1823"
+    apiHost: "https://tj.node.dzdstudio.cn:1823"
 }
 
 // 开发环境识别
