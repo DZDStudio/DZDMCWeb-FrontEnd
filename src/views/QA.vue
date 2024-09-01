@@ -39,7 +39,7 @@
                     <mdui-list-item slot="header" icon="mark_chat_unread">如何进行游戏内语音聊天?</mdui-list-item>
                     <mdui-list-item class="mdui-prose">
                         1. 准本 Java 模组客户端<br>
-                        2. 前往 <a href="https://cloud.dzdstudo.cn/s/jRfM?path=%2F">https://cloud.dzdstudio.cn/s/jRfM</a> 下载对应模组注入框架的 Mod。<br>
+                        2. 前往 <a href="https://cloud.dzdstudio.cn/s/jRfM?path=%2F">https://cloud.dzdstudio.cn/s/jRfM</a> 下载对应模组注入框架的 Mod。<br>
                         3. 将下载好的 Mod 放入 “mods“ 文件夹中，启动游戏后按 “V” 打开控制面板。<br><br>
                     </mdui-list-item>
                 </mdui-collapse-item>
